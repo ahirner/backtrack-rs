@@ -6,28 +6,34 @@ pub enum Solution {
     Unsat(Vec<usize>),
 }
 
-// todo: solve generically over Problem
-pub struct IterSolver {
-    problem: Box<dyn Problem>,
-    index: usize,         // current index into solution domain
-    solution: Vec<usize>, // scratch pad, length is current level of solution
-    domain: Vec<usize>,   // cached domain values from problem
-    terminated: bool,     // whether all solutions have been checked
-}
-
-impl IterSolver {
-    pub fn new(problem: Box<dyn Problem>) -> IterSolver {
-        let solution = Vec::with_capacity(problem.get_n());
-        let domain = problem.get_domain();
-        IterSolver { problem, index: 0, solution, domain, terminated: false }
-    }
-
+/// Solves assignment problems iteratively
+trait IterSolve<P: Problem>: Iterator<Item = Solution> {
     /// Advance solver with next candidate solution
     ///
     /// If the next solution is proved false return Unsat,
     /// if true and complete return Sat, otherwise None.
     /// Once all solutions are tried, the solver's terminated flag is set
     /// and subsequent calls panic.
+    fn push_sat(&mut self) -> Option<Solution>;
+}
+
+pub struct IterSolveNaive<'a, P: Problem> {
+    problem: &'a P,
+    index: usize,         // current index into solution domain
+    solution: Vec<usize>, // scratch pad, length is current level of solution
+    domain: Vec<usize>,   // cached domain values from problem
+    terminated: bool,     // whether all solutions have been checked
+}
+
+impl<'a, P: Problem> IterSolveNaive<'a, P> {
+    pub fn new(problem: &'a P) -> Self {
+        let solution = Vec::with_capacity(problem.get_n());
+        let domain = problem.get_domain();
+        IterSolveNaive { problem, index: 0, solution, domain, terminated: false }
+    }
+}
+
+impl<P: Problem> IterSolve<P> for IterSolveNaive<'_, P> {
     fn push_sat(&mut self) -> Option<Solution> {
         assert!(!self.terminated, "Tried to push solution whereas all candidates are exhausted");
         let mut index = self.index;
@@ -75,7 +81,7 @@ impl IterSolver {
     }
 }
 
-impl Iterator for IterSolver {
+impl<P: Problem> Iterator for IterSolveNaive<'_, P> {
     type Item = Solution;
 
     fn next(&mut self) -> Option<Self::Item> {

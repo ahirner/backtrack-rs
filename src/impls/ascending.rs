@@ -39,14 +39,14 @@ mod tests {
     use crate::impls::utils::sat_safe;
 
     #[test]
-    fn trivial_ascending_sat() {
+    fn ascending_sat() {
         let asc = Ascending::new(4, 0..4);
         assert!(sat_safe(&asc, 0..0));
         assert!(sat_safe(&asc, 0..4));
         assert!(sat_safe(&asc, 2..4));
     }
     #[test]
-    fn trivial_ascending_unsat() {
+    fn ascending_unsat() {
         let asc = Ascending::new(4, 0..4);
         assert!(!sat_safe(&asc, (0..2).rev()));
         assert!(!sat_safe(&asc, (0..4).rev()));
