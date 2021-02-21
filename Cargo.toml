@@ -1,0 +1,10 @@
+[package]
+name = "back-rs"
+version = "0.1.0"
+authors = ["ahirner <a.hirner@gmail.com>"]
+edition = "2018"
+categories = ["algorithms"]
+description = "Backtracking solver with examples"
+keywords = ["backtracking", "sat", "solver", "combinatorial", "search"]
+
+[dependencies]
