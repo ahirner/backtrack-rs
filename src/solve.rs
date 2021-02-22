@@ -1,4 +1,12 @@
 use crate::problem::Problem;
+use std::iter::FilterMap;
+
+#[derive(Debug)]
+pub enum CandidateSolution {
+    Incomplete,
+    Sat(Vec<usize>),
+    Unsat(Vec<usize>),
+}
 
 #[derive(Debug)]
 pub enum Solution {
@@ -6,15 +14,21 @@ pub enum Solution {
     Unsat(Vec<usize>),
 }
 
-/// Solves assignment problems iteratively
-trait IterSolve<P: Problem>: Iterator<Item = Solution> {
-    /// Advance solver with next candidate solution
-    ///
-    /// If the next solution is proved false return Unsat,
-    /// if true and complete return Sat, otherwise None.
-    /// Once all solutions are tried, the solver's terminated flag is set
-    /// and subsequent calls panic.
-    fn push_sat(&mut self) -> Option<Solution>;
+/// Yield candidate solutions
+///
+/// Each iterator item tests the next best candidate solution.
+/// If the next solution is proved false return Unsat,
+/// if proved true and complete return Sat, otherwise Incomplete.
+/// The iterator is exhausted when no more candidates can be tried.
+pub trait IterSolve: Iterator<Item = CandidateSolution> + Sized {
+    /// Only yield satisfying and unsatisfying solutions
+    fn solution_iter(self) -> FilterMap<Self, fn(CandidateSolution) -> Option<Solution>> {
+        self.filter_map(|s| match s {
+            CandidateSolution::Sat(sat) => Some(Solution::Sat(sat)),
+            CandidateSolution::Unsat(unsat) => Some(Solution::Unsat(unsat)),
+            CandidateSolution::Incomplete => None,
+        })
+    }
 }
 
 pub struct IterSolveNaive<'a, P: Problem> {
@@ -33,9 +47,17 @@ impl<'a, P: Problem> IterSolveNaive<'a, P> {
     }
 }
 
-impl<P: Problem> IterSolve<P> for IterSolveNaive<'_, P> {
-    fn push_sat(&mut self) -> Option<Solution> {
-        assert!(!self.terminated, "Tried to push solution whereas all candidates are exhausted");
+// todo: how to blanket impl?
+impl<P: Problem> IterSolve for IterSolveNaive<'_, P> {}
+
+impl<P: Problem> Iterator for IterSolveNaive<'_, P> {
+    type Item = CandidateSolution;
+
+    fn next(&mut self) -> Option<CandidateSolution> {
+        if self.terminated {
+            return None;
+        }
+
         let mut index = self.index;
         let candidate = self.domain[index];
         let sat = self.problem.inc_sat(self.solution.as_ref(), candidate);
@@ -48,20 +70,22 @@ impl<P: Problem> IterSolve<P> for IterSolveNaive<'_, P> {
             if complete {
                 // breadth-next
                 index += 1;
-                Some(Solution::Sat(self.solution.clone()))
+                // todo: can we borrow until the next candidate solution?
+                Some(CandidateSolution::Sat(self.solution.clone()))
             } else {
                 // depth-first
                 index = 0;
-                None
+                Some(CandidateSolution::Incomplete)
             }
         } else {
             // breadth-next
             index += 1;
 
-            // todo: can we move cloning to caller and hence make optional?
+            // todo: turn into borrow + copy of index if borrow would
+            // also work for `Sat`
             let mut unsat_solution = self.solution.clone();
             unsat_solution.push(candidate);
-            Some(Solution::Unsat(unsat_solution))
+            Some(CandidateSolution::Unsat(unsat_solution))
         };
 
         // back-track or terminate
@@ -78,18 +102,5 @@ impl<P: Problem> IterSolve<P> for IterSolveNaive<'_, P> {
 
         self.index = index;
         solution
-    }
-}
-
-impl<P: Problem> Iterator for IterSolveNaive<'_, P> {
-    type Item = Solution;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        while !self.terminated {
-            if let Some(solution) = self.push_sat() {
-                return Some(solution);
-            }
-        }
-        None
     }
 }

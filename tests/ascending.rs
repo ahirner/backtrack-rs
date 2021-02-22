@@ -1,13 +1,13 @@
 use back_rs::impls::Ascending;
-use back_rs::solve::IterSolveNaive;
 use back_rs::solve::Solution::Sat;
+use back_rs::solve::{IterSolve, IterSolveNaive};
 
 #[test]
 fn ascending_search_sat() {
     let asc = Ascending::new(3, 0..4);
     let solver = IterSolveNaive::new(&asc);
 
-    let mut sats = solver.into_iter().filter_map(|s| match s {
+    let mut sats = solver.solution_iter().filter_map(|s| match s {
         Sat(sol) => Some(sol),
         _ => None,
     });
@@ -24,7 +24,7 @@ fn ascending_search_nosat() {
     let asc = Ascending::new(4, 0..3);
     let solver = IterSolveNaive::new(&asc);
 
-    let unsats: Vec<_> = solver.into_iter().collect();
+    let unsats: Vec<_> = solver.solution_iter().collect();
 
     assert_eq!(unsats.len(), 17);
 }
