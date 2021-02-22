@@ -1,5 +1,5 @@
-use back_rs::impls::Ascending;
-use back_rs::solve::IterSolveNaive;
+use back_rs::problems::Ascending;
+use back_rs::solvers::IterSolveNaive;
 
 fn main() {
     let asc = Ascending::new(4, 0..5);

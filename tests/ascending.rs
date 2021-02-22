@@ -1,6 +1,6 @@
-use back_rs::impls::Ascending;
-use back_rs::solve::Solution::Sat;
-use back_rs::solve::{IterSolve, IterSolveNaive};
+use back_rs::problems::Ascending;
+use back_rs::solve::{IterSolve, Solution::Sat};
+use back_rs::solvers::IterSolveNaive;
 
 #[test]
 fn ascending_search_sat() {

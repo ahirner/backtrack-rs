@@ -36,7 +36,7 @@ impl Problem for Ascending {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::impls::utils::sat_safe;
+    use crate::problems::utils::sat_safe;
 
     #[test]
     fn ascending_sat() {
