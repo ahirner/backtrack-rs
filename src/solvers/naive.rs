@@ -34,16 +34,17 @@ impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
 
         // increment search pointer and solution
         let solution = if sat {
-            self.solution.push(candidate);
-
-            let complete = self.solution.len() == self.problem.get_n();
+            let complete = self.solution.len() + 1 == self.problem.get_n();
             if complete {
                 // breadth-next
                 index += 1;
                 // todo: can we borrow until next candidate solution?
-                Some(CandidateSolution::Sat(self.solution.clone()))
+                let mut sat_solution = self.solution.clone();
+                sat_solution.push(candidate);
+                Some(CandidateSolution::Sat(sat_solution))
             } else {
                 // depth-first
+                self.solution.push(candidate);
                 index = 0;
                 Some(CandidateSolution::Incomplete)
             }
@@ -51,8 +52,7 @@ impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
             // breadth-next
             index += 1;
 
-            // todo: turn into borrow + copy of index if borrow would
-            //  also work for `Sat`
+            // todo: can we borrow until next candidate solution?
             let mut unsat_solution = self.solution.clone();
             unsat_solution.push(candidate);
             Some(CandidateSolution::Unsat(unsat_solution))

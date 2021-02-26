@@ -3,7 +3,7 @@ use back_rs::solve::{IterSolve, Solution::Sat};
 use back_rs::solvers::IterSolveNaive;
 
 #[test]
-fn ascending_search_sat() {
+fn total_sum_search_sat() {
     let asc = TotalSum::new(3, &[2, 0], 3);
     let solver = IterSolveNaive::new(&asc);
 
@@ -14,6 +14,6 @@ fn ascending_search_sat() {
 
     assert_eq!(sats.next(), Some(vec![2, 2, 0]));
     assert_eq!(sats.next(), Some(vec![2, 0, 2]));
-    // assert_eq!(sats.next(), Some(vec![0, 2, 2])); // todo: runs infinitely
-    // assert_eq!(sats.next(), None);
+    assert_eq!(sats.next(), Some(vec![0, 2, 2]));
+    assert_eq!(sats.next(), None);
 }
