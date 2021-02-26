@@ -1,4 +1,4 @@
-use crate::problem::Problem;
+use crate::problem::{Problem, Scope};
 use std::ops::Range;
 
 /// Accept `n` numbers where each number must be
@@ -15,7 +15,7 @@ impl Ascending {
     }
 }
 
-impl Problem for Ascending {
+impl Scope for Ascending {
     fn get_n(&self) -> usize {
         self.n
     }
@@ -23,7 +23,8 @@ impl Problem for Ascending {
     fn get_domain(&self) -> Vec<usize> {
         self.domain.clone().collect()
     }
-
+}
+impl Problem for Ascending {
     fn inc_sat(&self, solution: &[usize], x_l: usize) -> bool {
         if let Some(last) = solution.last() {
             x_l > *last

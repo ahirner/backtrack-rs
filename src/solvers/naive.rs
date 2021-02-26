@@ -1,7 +1,7 @@
-use crate::problem::Problem;
+use crate::problem::{Problem, Scope};
 use crate::solve::{CandidateSolution, IterSolve};
 
-pub struct IterSolveNaive<'a, P: Problem> {
+pub struct IterSolveNaive<'a, P: Scope + Problem> {
     problem: &'a P,
     index: usize,         // current index into solution domain
     solution: Vec<usize>, // scratch pad, length is current level of solution
@@ -9,7 +9,7 @@ pub struct IterSolveNaive<'a, P: Problem> {
     terminated: bool,     // whether all solutions have been checked
 }
 
-impl<'a, P: Problem> IterSolveNaive<'a, P> {
+impl<'a, P: Scope + Problem> IterSolveNaive<'a, P> {
     pub fn new(problem: &'a P) -> Self {
         let solution = Vec::with_capacity(problem.get_n());
         let domain = problem.get_domain();
@@ -18,9 +18,9 @@ impl<'a, P: Problem> IterSolveNaive<'a, P> {
 }
 
 // todo: how to blanket impl?
-impl<P: Problem> IterSolve for IterSolveNaive<'_, P> {}
+impl<P: Scope + Problem> IterSolve for IterSolveNaive<'_, P> {}
 
-impl<P: Problem> Iterator for IterSolveNaive<'_, P> {
+impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
     type Item = CandidateSolution;
 
     fn next(&mut self) -> Option<CandidateSolution> {

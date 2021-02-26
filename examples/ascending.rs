@@ -3,7 +3,7 @@ use back_rs::solvers::IterSolveNaive;
 
 fn main() {
     let asc = Ascending::new(4, 0..5);
-    println!("backtrack.rs: {:?}", asc);
+    println!("ascending.rs: {:?}", asc);
 
     let solver = IterSolveNaive::new(&asc);
     for solution in solver.into_iter() {

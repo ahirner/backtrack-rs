@@ -1,10 +1,10 @@
 //! Helper functions for unit testing problems
 
 #[cfg(test)]
-use crate::problem::Problem;
+use crate::problem::{Problem, Scope};
 
 #[cfg(test)]
-fn sat<P: Problem>(problem: &P, solution: impl IntoIterator<Item = usize>) -> bool {
+fn sat<P: Scope + Problem>(problem: &P, solution: impl IntoIterator<Item = usize>) -> bool {
     // todo: use ArrayVector or similar
     let mut all = Vec::with_capacity(problem.get_n());
     for x_l in solution.into_iter() {
@@ -19,7 +19,10 @@ fn sat<P: Problem>(problem: &P, solution: impl IntoIterator<Item = usize>) -> bo
 /// collect all solutions and assert their size is below n and within
 /// domain, then return `sat`
 #[cfg(test)]
-pub(crate) fn sat_safe<P: Problem>(problem: &P, solution: impl IntoIterator<Item = usize>) -> bool {
+pub(crate) fn sat_safe<P: Scope + Problem>(
+    problem: &P,
+    solution: impl IntoIterator<Item = usize>,
+) -> bool {
     let all: Vec<_> = solution.into_iter().collect();
     assert!(all.len() <= problem.get_n(), "number of solutions cannot be beyond n");
     let domain = problem.get_domain();
