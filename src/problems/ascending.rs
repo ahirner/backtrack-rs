@@ -25,7 +25,7 @@ impl Scope for Ascending {
     }
 }
 impl Problem for Ascending {
-    fn inc_sat(&self, solution: &[usize], x_l: usize) -> bool {
+    fn extends_sat(&self, solution: &[usize], x_l: usize) -> bool {
         if let Some(last) = solution.last() {
             x_l > *last
         } else {

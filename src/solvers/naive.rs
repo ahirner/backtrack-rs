@@ -1,5 +1,5 @@
 use crate::problem::{Problem, Scope};
-use crate::solve::{CandidateSolution, IterSolve};
+use crate::solve::CandidateSolution;
 
 pub struct IterSolveNaive<'a, P: Scope + Problem> {
     problem: &'a P,
@@ -17,9 +17,6 @@ impl<'a, P: Scope + Problem> IterSolveNaive<'a, P> {
     }
 }
 
-// todo: how to blanket impl?
-impl<P: Scope + Problem> IterSolve for IterSolveNaive<'_, P> {}
-
 impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
     type Item = CandidateSolution;
 
@@ -30,7 +27,7 @@ impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
 
         let mut index = self.index;
         let candidate = self.domain[index];
-        let sat = self.problem.inc_sat(self.solution.as_ref(), candidate);
+        let sat = self.problem.extends_sat(self.solution.as_ref(), candidate);
 
         // increment search pointer and solution
         let solution = if sat {

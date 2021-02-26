@@ -13,6 +13,8 @@ pub enum Solution {
     Unsat(Vec<usize>),
 }
 
+type OptionalSat = Option<Vec<usize>>;
+
 /// Yield candidate solutions
 ///
 /// Each iterator item tests the next best candidate solution.
@@ -28,4 +30,13 @@ pub trait IterSolve: Iterator<Item = CandidateSolution> + Sized {
             CandidateSolution::Incomplete => None,
         })
     }
+    // Only yield satisfying solutions
+    fn sat_iter(self) -> FilterMap<Self, fn(CandidateSolution) -> OptionalSat> {
+        self.filter_map(|s| match s {
+            CandidateSolution::Sat(sat) => Some(sat),
+            _ => None,
+        })
+    }
 }
+
+impl<T: Iterator<Item = CandidateSolution>> IterSolve for T {}

@@ -8,7 +8,7 @@ fn sat<P: Scope + Problem>(problem: &P, solution: impl IntoIterator<Item = usize
     // todo: use ArrayVector or similar
     let mut all = Vec::with_capacity(problem.get_n());
     for x_l in solution.into_iter() {
-        if !problem.inc_sat(&all, x_l) {
+        if !problem.extends_sat(&all, x_l) {
             return false;
         }
         all.push(x_l);
