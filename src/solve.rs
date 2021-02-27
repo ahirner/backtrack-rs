@@ -24,6 +24,8 @@ pub enum Solution {
     Unsat(Vec<usize>),
 }
 
+type OptionalSat = Option<Vec<usize>>;
+
 /// Filter interesting solution candidates
 ///
 pub trait IterSolveExt: Iterator<Item = CandidateSolution> + Sized {
@@ -36,7 +38,7 @@ pub trait IterSolveExt: Iterator<Item = CandidateSolution> + Sized {
         })
     }
     // Only yield satisfying solutions
-    fn sat_iter(self) -> FilterMap<Self, fn(CandidateSolution) -> Option<Vec<usize>>> {
+    fn sat_iter(self) -> FilterMap<Self, fn(CandidateSolution) -> OptionalSat> {
         self.filter_map(|s| match s {
             CandidateSolution::Sat(sat) => Some(sat),
             _ => None,
