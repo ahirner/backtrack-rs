@@ -38,6 +38,22 @@ jobs:
         with:
           command: test
 
+  clippy_check:
+    name: clippy_check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions-rs/toolchain@v1
+        with:
+            profile: minimal
+            toolchain: stable
+            components: clippy
+            override: true
+      - uses: actions-rs/clippy-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          args: --all-targets --all-features -- -D warnings
+
   lints:
     name: lints
     runs-on: ubuntu-latest
@@ -49,7 +65,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-          components: rustfmt, clippy
+          components: rustfmt
       - name: Install cargo-sync-readme
         uses: actions-rs/install@v0.1
         with:
@@ -60,10 +76,5 @@ jobs:
         with:
           command: fmt
           args: --all -- --check
-      - name: clippy
-        uses: actions-rs/clippy-check@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          args: --all-targets --all-features -- -D warnings
       - name: sync-readme
         run: cargo sync-readme -c
