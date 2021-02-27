@@ -1,4 +1,6 @@
-# backtrack-rs
+# backtrack-rs 🦀
+[![Documentation](https://docs.rs/backtrack-rs/badge.svg)](https://docs.rs/backtrack-rs)
+[![crates.io](https://img.shields.io/crates/v/backtrack-rs.svg)](https://crates.io/crates/backtrack-rs)
 [![CI](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-ci.yml)
 ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
 <!-- cargo-sync-readme start -->
@@ -102,7 +104,6 @@ cargo benches
 ```
 
 ## Todos
-- [ ] crates.io release 🦀
 - [ ] `CheckInc` solver
 - [ ] generic `domain` values
 - [ ] parallelize search

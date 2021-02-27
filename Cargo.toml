@@ -1,13 +1,15 @@
 [package]
 name = "backtrack-rs"
 version = "0.1.0"
-authors = ["ahirner <a.hirner@gmail.com>"]
+authors = ["Alexander Hirner <a.hirner@gmail.com>"]
 edition = "2018"
+
 categories = ["algorithms"]
 description = "Backtracking solver with examples"
 keywords = ["backtracking", "sat", "solver", "combinatorial", "search"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
+repository = "https://github.com/ahirner/backtrack-rs"
 
 [dependencies]
 
@@ -17,3 +19,7 @@ criterion = "0.3"
 [[bench]]
 name = "n_queens"
 harness = false
+
+[package.metadata.docs.rs]
+# reduce docs.rs build time
+targets = ["x86_64-unknown-linux-gnu"]
