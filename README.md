@@ -88,3 +88,4 @@ cargo run --example total_sum | grep Sat
 - [ ] `CheckInc` solver
 - [ ] generic `domain` values
 - [ ] crates.io release 🦀
+- [ ] parallelize search
