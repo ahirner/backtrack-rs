@@ -78,8 +78,17 @@ impl CheckInc for CountDown{
 <!-- cargo-sync-readme end -->
 ## Examples
 Checkout the `examples` folder for example implementations.
+
 ```bash
-# print sequence of numbers which sum up to a minimum value but not more
+# 4-queens solution
+cargo run --example n_queens 4 | grep Sat
+## n_queens.rs: NQueens { n: 4 }
+## Sat([1, 3, 0, 2])
+## Sat([2, 0, 3, 1])
+```
+
+```bash
+# sequence of numbers which sum up to a minimum value but not more
 cargo run --example total_sum | grep Sat
 ```
 
