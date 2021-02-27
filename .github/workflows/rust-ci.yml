@@ -26,24 +26,20 @@ jobs:
 
   test:
     name: test
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        rust: [stable, nightly]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.rust }}
+          toolchain: stable
           override: true
       - uses: actions-rs/cargo@v1
         with:
           command: test
 
   lints:
-    name: Lints
+    name: lints
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
