@@ -4,18 +4,18 @@ use std::ops::Range;
 /// Accept `n` numbers where each number must be
 /// greater than former and from `domain`
 #[derive(Debug)]
-pub struct Ascending {
+pub struct CountUp {
     n: usize,
     domain: Range<usize>,
 }
 
-impl Ascending {
+impl CountUp {
     pub fn new(n: usize, domain: Range<usize>) -> Self {
-        Ascending { n, domain }
+        CountUp { n, domain }
     }
 }
 
-impl Scope for Ascending {
+impl Scope for CountUp {
     fn size(&self) -> usize {
         self.n
     }
@@ -24,10 +24,10 @@ impl Scope for Ascending {
         self.domain.clone().collect()
     }
 }
-impl Check for Ascending {
-    fn extends_sat(&self, solution: &[usize], x_l: usize) -> bool {
+impl Check for CountUp {
+    fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
         if let Some(last) = solution.last() {
-            x_l > *last
+            x > *last
         } else {
             true
         }
@@ -40,15 +40,15 @@ mod tests {
     use crate::problems::utils::sat_safe;
 
     #[test]
-    fn ascending_sat() {
-        let asc = Ascending::new(4, 0..4);
+    fn count_up_sat() {
+        let asc = CountUp::new(4, 0..4);
         assert!(sat_safe(&asc, 0..0));
         assert!(sat_safe(&asc, 0..4));
         assert!(sat_safe(&asc, 2..4));
     }
     #[test]
-    fn ascending_unsat() {
-        let asc = Ascending::new(4, 0..4);
+    fn count_up_unsat() {
+        let asc = CountUp::new(4, 0..4);
         assert!(!sat_safe(&asc, (0..2).rev()));
         assert!(!sat_safe(&asc, (0..4).rev()));
     }

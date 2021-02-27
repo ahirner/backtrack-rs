@@ -6,5 +6,6 @@ edition = "2018"
 categories = ["algorithms"]
 description = "Backtracking solver with examples"
 keywords = ["backtracking", "sat", "solver", "combinatorial", "search"]
+readme = "README.md"
 
 [dependencies]

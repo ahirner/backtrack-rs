@@ -1,5 +1,5 @@
 use backtrack_rs::problems::TotalSum;
-use backtrack_rs::solve::IterSolve;
+use backtrack_rs::solve::IterSolveExt;
 use backtrack_rs::solvers::IterSolveNaive;
 
 #[test]

@@ -1,10 +1,10 @@
-use backtrack_rs::problems::Ascending;
-use backtrack_rs::solve::IterSolve;
+use backtrack_rs::problems::CountUp;
+use backtrack_rs::solve::IterSolveExt;
 use backtrack_rs::solvers::IterSolveNaive;
 
 #[test]
-fn ascending_search_sat() {
-    let asc = Ascending::new(3, 0..4);
+fn count_up_search_sat() {
+    let asc = CountUp::new(3, 0..4);
     let solver = IterSolveNaive::new(&asc);
 
     let mut sats = solver.sat_iter();
@@ -17,8 +17,8 @@ fn ascending_search_sat() {
 }
 
 #[test]
-fn ascending_search_nosat() {
-    let asc = Ascending::new(4, 0..3);
+fn count_up_search_nosat() {
+    let asc = CountUp::new(4, 0..3);
     let solver = IterSolveNaive::new(&asc);
 
     let unsats: Vec<_> = solver.solution_iter().collect();

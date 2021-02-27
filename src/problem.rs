@@ -14,8 +14,8 @@ pub trait Check {
     ///
     /// # Arguments
     /// * `solution`: candidate solution from x_0 to x_l-1 deemed valid
-    /// * `x_l`: new value
-    fn extends_sat(&self, solution: &[usize], x_l: usize) -> bool;
+    /// * `x`: new value
+    fn extends_sat(&self, solution: &[usize], x: usize) -> bool;
 }
 
 /// Check if a new value is satisfactory against reduced combinations incrementally.
@@ -37,8 +37,8 @@ pub trait CheckInc {
 }
 
 impl<T: CheckInc> Check for T {
-    fn extends_sat(&self, solution: &[usize], x_l: usize) -> bool {
+    fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
         let accu = solution.iter().fold(None, |a, x| Some(self.fold_acc(a, x)));
-        self.accu_sat(accu.as_ref(), &x_l, solution.len())
+        self.accu_sat(accu.as_ref(), &x, solution.len())
     }
 }
