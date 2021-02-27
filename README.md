@@ -1,5 +1,5 @@
 # backtrack-rs
-[![Build Status](https://github.com/ahirner/backtrack-rs/workflows/CI/badge.svg)](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-ci.yml)
+[![CI](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-ci.yml/badge.svg)](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-ci.yml)
 ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
 <!-- cargo-sync-readme start -->
 
@@ -101,9 +101,7 @@ cargo run --example total_sum | grep Sat
 cargo benches
 ```
 
-
 ## Todos
-- [ ] CI
 - [ ] crates.io release 🦀
 - [ ] `CheckInc` solver
 - [ ] generic `domain` values
