@@ -1,6 +1,6 @@
-use back_rs::problems::Ascending;
-use back_rs::solve::IterSolve;
-use back_rs::solvers::IterSolveNaive;
+use backtrack_rs::problems::Ascending;
+use backtrack_rs::solve::IterSolve;
+use backtrack_rs::solvers::IterSolveNaive;
 
 #[test]
 fn ascending_search_sat() {

@@ -1,5 +1,5 @@
 [package]
-name = "back-rs"
+name = "backtrack-rs"
 version = "0.1.0"
 authors = ["ahirner <a.hirner@gmail.com>"]
 edition = "2018"
