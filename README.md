@@ -1,4 +1,5 @@
 # backtrack-rs
+![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
 <!-- cargo-sync-readme start -->
 
 `backtrack-rs` lets you define and solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
@@ -102,7 +103,7 @@ cargo benches
 
 ## Todos
 - [ ] CI
+- [ ] crates.io release 🦀
 - [ ] `CheckInc` solver
 - [ ] generic `domain` values
-- [ ] crates.io release 🦀
 - [ ] parallelize search

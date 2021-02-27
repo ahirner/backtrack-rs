@@ -6,6 +6,7 @@ edition = "2018"
 categories = ["algorithms"]
 description = "Backtracking solver with examples"
 keywords = ["backtracking", "sat", "solver", "combinatorial", "search"]
+license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 [dependencies]
