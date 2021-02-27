@@ -7,12 +7,14 @@
 //! or [CheckInc](crate::problem::CheckInc) trait determines whether
 //! a particular combination of values is satisfactory.
 //!
+//! ## Usage
+//!
 //! It is required that partial solutions, i.e. shorter solutions
 //! than in scope must satisfy if a complete solutions should as well.
 //! [Solvers](crate::solvers) borrow the problem for the duration of their search
 //! for [candidate solutions](crate::solve::CandidateSolution).
 //!
-//! ## Basic Usage
+//! ### Checks
 //! We define the problem of counting down with a limited set of numbers and solve iteratively.
 //! ```rust
 //! use backtrack_rs::problem::{Check, Scope};
@@ -43,7 +45,7 @@
 //! assert_eq!(sats.next(), Some(vec![3, 2, 1]));
 //! assert_eq!(sats.next(), None);
 //! ```
-//! ## Incremental Check
+//! ### Incremental Checks
 //! If your checks can be formulated with a reduced solution,
 //! implement [CheckInc](crate::problem::CheckInc) instead.
 //!

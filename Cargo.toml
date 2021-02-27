@@ -9,3 +9,10 @@ keywords = ["backtracking", "sat", "solver", "combinatorial", "search"]
 readme = "README.md"
 
 [dependencies]
+
+[dev-dependencies]
+criterion = "0.3"
+
+[[bench]]
+name = "n_queens"
+harness = false

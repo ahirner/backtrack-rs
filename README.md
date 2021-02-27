@@ -10,12 +10,14 @@ values for possible solution. The [Check](https://docs.rs/backtrack-rs/latest/ba
 or [CheckInc](https://docs.rs/backtrack-rs/latest/backtrack-rs/problem/trait.CheckInc.html) trait determines whether
 a particular combination of values is satisfactory.
 
+## Usage
+
 It is required that partial solutions, i.e. shorter solutions
 than in scope must satisfy if a complete solutions should as well.
 [Solvers](https://docs.rs/backtrack-rs/latest/backtrack-rs/solvers/) borrow the problem for the duration of their search
 for [candidate solutions](https://docs.rs/backtrack-rs/latest/backtrack-rs/solve/enum.CandidateSolution.html).
 
-## Basic Usage
+### Checks
 We define the problem of counting down with a limited set of numbers and solve iteratively.
 ```rust
 use backtrack_rs::problem::{Check, Scope};
@@ -46,7 +48,7 @@ assert_eq!(sats.next(), Some(vec![3, 2, 0]));
 assert_eq!(sats.next(), Some(vec![3, 2, 1]));
 assert_eq!(sats.next(), None);
 ```
-## Incremental Check
+### Incremental Checks
 If your checks can be formulated with a reduced solution,
 implement [CheckInc](https://docs.rs/backtrack-rs/latest/backtrack-rs/problem/trait.CheckInc.html) instead.
 
@@ -77,7 +79,7 @@ impl CheckInc for CountDown{
 
 <!-- cargo-sync-readme end -->
 ## Examples
-Checkout the `examples` folder for example implementations.
+Checkout the `examples` folder for example problems.
 
 ```bash
 # 4-queens solution
@@ -91,6 +93,12 @@ cargo run --example n_queens 4 | grep Sat
 # sequence of numbers which sum up to a minimum value but not more
 cargo run --example total_sum | grep Sat
 ```
+## Benchmarks
+`backtrack-rs` uses [criterion](https://crates.io/crates/criterion) for benches.
+```bash
+cargo benches
+```
+
 
 ## Todos
 - [ ] CI
