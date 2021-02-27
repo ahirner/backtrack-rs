@@ -1,7 +1,7 @@
-use crate::problem::{Problem, Scope};
+use crate::problem::{Check, Scope};
 use crate::solve::CandidateSolution;
 
-pub struct IterSolveNaive<'a, P: Scope + Problem> {
+pub struct IterSolveNaive<'a, P: Scope + Check> {
     problem: &'a P,
     index: usize,         // current index into solution domain
     solution: Vec<usize>, // scratch pad, length is current level of solution
@@ -9,15 +9,15 @@ pub struct IterSolveNaive<'a, P: Scope + Problem> {
     terminated: bool,     // whether all solutions have been checked
 }
 
-impl<'a, P: Scope + Problem> IterSolveNaive<'a, P> {
+impl<'a, P: Scope + Check> IterSolveNaive<'a, P> {
     pub fn new(problem: &'a P) -> Self {
-        let solution = Vec::with_capacity(problem.get_n());
-        let domain = problem.get_domain();
+        let solution = Vec::with_capacity(problem.size());
+        let domain = problem.domain();
         IterSolveNaive { problem, index: 0, solution, domain, terminated: false }
     }
 }
 
-impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
+impl<P: Scope + Check> Iterator for IterSolveNaive<'_, P> {
     type Item = CandidateSolution;
 
     fn next(&mut self) -> Option<CandidateSolution> {
@@ -31,7 +31,7 @@ impl<P: Scope + Problem> Iterator for IterSolveNaive<'_, P> {
 
         // increment search pointer and solution
         let solution = if sat {
-            let complete = self.solution.len() + 1 == self.problem.get_n();
+            let complete = self.solution.len() + 1 == self.problem.size();
             if complete {
                 // breadth-next
                 index += 1;

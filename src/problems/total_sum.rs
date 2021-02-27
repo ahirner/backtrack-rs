@@ -1,4 +1,4 @@
-use crate::problem::{ProblemInc, Scope};
+use crate::problem::{CheckInc, Scope};
 
 /// Accept all values where the final sum was reached with one non-zero solution.
 ///
@@ -18,11 +18,11 @@ impl TotalSum {
 }
 
 impl Scope for TotalSum {
-    fn get_n(&self) -> usize {
+    fn size(&self) -> usize {
         self.n
     }
 
-    fn get_domain(&self) -> Vec<usize> {
+    fn domain(&self) -> Vec<usize> {
         self.domain.clone()
     }
 }
@@ -33,7 +33,7 @@ pub struct SumReached {
     satisfied: bool,
 }
 
-impl ProblemInc for TotalSum {
+impl CheckInc for TotalSum {
     type Accumulator = SumReached;
     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize) -> Self::Accumulator {
         let sum = if let Some(a) = accu { a.sum + *x } else { *x };
