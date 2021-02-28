@@ -2,17 +2,17 @@
 //! succinctly.
 //!
 //! Problems are defined by their *scope* and *checks* against possible solutions.
-//! The [Scope](crate::problem::Scope) determines length and allowed
-//! values for possible solution. The [Check](crate::problem::Check)
+//! A [Scope](crate::problem::Scope) determines length and allowed
+//! values in a solution. The [Check](crate::problem::Check)
 //! or [CheckInc](crate::problem::CheckInc) trait determines whether
 //! a particular combination of values is satisfactory.
 //!
 //! ## Usage
 //!
-//! It is required that partial solutions, i.e. shorter solutions
-//! than in scope must satisfy if a complete solutions should as well.
-//! [Solvers](crate::solvers) borrow the problem for the duration of their search
-//! for [candidate solutions](crate::solve::CandidateSolution).
+//! It is required that solutions shorter than in scope, i.e. partial
+//! solutions must satisfy if the completed solutions should as well.
+//! [Solvers](crate::solvers) borrow a problem in search for
+//! [candidate solutions](crate::solve::CandidateSolution).
 //!
 //! ### Checks
 //! We define the problem of counting down with a limited set of numbers and solve iteratively.
@@ -31,8 +31,8 @@
 //! }
 //!
 //! impl Check for CountDown{
-//!     fn extends_sat(&self, solution: &[usize], x_l: usize) -> bool {
-//!         solution.last().map_or(true, |last| *last > x_l)
+//!     fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
+//!         solution.last().map_or(true, |last| *last > x)
 //!     }
 //! }
 //!
@@ -46,11 +46,11 @@
 //! assert_eq!(sats.next(), None);
 //! ```
 //! ### Incremental Checks
-//! If your checks can be formulated with a reduced solution,
+//! If your checks can be formulated against a reduced solution,
 //! implement [CheckInc](crate::problem::CheckInc) instead.
 //!
-//! The same result as above can be formulated by "computing"
-//! the last item at each step. This approach makes more sense if
+//! The same result as above can be obtained by first "computing"
+//! the last item at each step. Such an approach makes more sense if
 //! actual work on more than one prior value needs to be peformed
 //! for any given sat check.
 //!
