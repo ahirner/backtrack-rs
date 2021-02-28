@@ -1,3 +1,5 @@
+//! Types defining solutions and help working with them
+
 use std::iter::FilterMap;
 
 /// Items of some intermediate solution.

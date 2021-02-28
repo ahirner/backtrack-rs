@@ -79,7 +79,7 @@
 //!        accu.map_or(true, |last| last > x)
 //!     }
 //! }
-//! // since `CheckInc` impls `Check`, the same solver as in example above can be used
+//! // since `CheckInc` impls `Check`, the same solver as before can be used
 //! // todo: specialize solver to actually realize performance advantage
 //! // ...
 //! #

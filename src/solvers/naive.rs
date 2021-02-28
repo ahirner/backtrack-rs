@@ -1,12 +1,17 @@
 use crate::problem::{Check, Scope};
 use crate::solve::CandidateSolution;
 
+/// Backtracking solver without planning
 pub struct IterSolveNaive<'a, P: Scope + Check> {
     problem: &'a P,
-    index: usize,         // current index into solution domain
-    solution: Vec<usize>, // scratch pad, length is current level of solution
-    domain: Vec<usize>,   // cached domain values from problem
-    terminated: bool,     // whether all solutions have been checked
+    /// Current index into solution domain
+    index: usize,
+    /// Scratch pad, length is current level of solution
+    solution: Vec<usize>,
+    /// Cached domain values from problem
+    domain: Vec<usize>,
+    /// Whether all solutions have been checked
+    terminated: bool,
 }
 
 impl<'a, P: Scope + Check> IterSolveNaive<'a, P> {
@@ -55,7 +60,7 @@ impl<P: Scope + Check> Iterator for IterSolveNaive<'_, P> {
             Some(CandidateSolution::Unsat(unsat_solution))
         };
 
-        // back-track or terminate
+        // backtrack or terminate
         while index == self.domain.len() {
             let last_candidate = self.solution.pop();
             if let Some(last) = last_candidate {

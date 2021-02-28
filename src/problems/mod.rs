@@ -1,3 +1,5 @@
+//! Example problems
+
 pub mod count_up;
 pub mod n_queens;
 pub mod total_sum;

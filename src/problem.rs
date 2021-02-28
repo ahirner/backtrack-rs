@@ -1,10 +1,12 @@
+//! Traits defining a problem
+
 use std::fmt::Debug;
 
 /// Size and solution domain of a problem
 pub trait Scope {
-    /// Return number of necessary solution values
+    /// Return number values needed for a complete solution
     fn size(&self) -> usize;
-    /// Return all possible solution values to try
+    /// Return all allowed values in a solution
     fn domain(&self) -> Vec<usize>;
 }
 
