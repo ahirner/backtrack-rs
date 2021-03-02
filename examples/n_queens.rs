@@ -1,7 +1,7 @@
 use std::error::Error;
 
-use backtrack_rs::problems::NQueens;
-use backtrack_rs::solvers::IterSolveNaive;
+use backtrack::problems::NQueens;
+use backtrack::solvers::IterSolveNaive;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = std::env::args().collect();

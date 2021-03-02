@@ -1,5 +1,5 @@
-use backtrack_rs::problems::CountUp;
-use backtrack_rs::solvers::IterSolveNaive;
+use backtrack::problems::CountUp;
+use backtrack::solvers::IterSolveNaive;
 
 fn main() {
     let asc = CountUp::new(4, 0..5);

@@ -1,6 +1,6 @@
-use backtrack_rs::problems::CountUp;
-use backtrack_rs::solve::IterSolveExt;
-use backtrack_rs::solvers::IterSolveNaive;
+use backtrack::problems::CountUp;
+use backtrack::solve::IterSolveExt;
+use backtrack::solvers::IterSolveNaive;
 
 #[test]
 fn count_up_search_sat() {

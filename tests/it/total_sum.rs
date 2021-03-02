@@ -1,6 +1,6 @@
-use backtrack_rs::problems::TotalSum;
-use backtrack_rs::solve::IterSolveExt;
-use backtrack_rs::solvers::IterSolveNaive;
+use backtrack::problems::TotalSum;
+use backtrack::solve::IterSolveExt;
+use backtrack::solvers::IterSolveNaive;
 
 #[test]
 fn total_sum_search_sat() {
