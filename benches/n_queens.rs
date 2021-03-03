@@ -1,7 +1,7 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
-use backtrack_rs::problems::NQueens;
-use backtrack_rs::solvers::IterSolveNaive;
+use backtrack::problems::NQueens;
+use backtrack::solvers::IterSolveNaive;
 
 fn bench_n_queens(n: usize) -> usize {
     let n_queens = NQueens::new(n);

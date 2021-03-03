@@ -1,4 +1,4 @@
-//! `backtrack-rs` lets you define and solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
+//! `backtrack` lets you define and solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
 //! succinctly.
 //!
 //! Problems are defined by their *scope* and *checks* against possible solutions.
@@ -17,10 +17,10 @@
 //! ### Checks
 //! We define the problem of counting down with a limited set of numbers and solve iteratively.
 //! ```rust
-//! use backtrack_rs::problem::{Check, Scope};
-//! use backtrack_rs::solvers::IterSolveNaive;
+//! use backtrack::problem::{Check, Scope};
+//! use backtrack::solvers::IterSolveNaive;
 //! // helper trait to filter solutions of interest
-//! use backtrack_rs::solve::IterSolveExt;
+//! use backtrack::solve::IterSolveExt;
 //!
 //! /// Obtain permutations of some 3 descending numbers
 //! struct CountDown {}
@@ -55,10 +55,10 @@
 //! for any given sat check.
 //!
 //! ```rust
-//! use backtrack_rs::problem::{CheckInc, Scope};
+//! use backtrack::problem::{CheckInc, Scope};
 //! // ...
-//! # use backtrack_rs::solvers::IterSolveNaive;
-//! # use backtrack_rs::solve::IterSolveExt;
+//! # use backtrack::solvers::IterSolveNaive;
+//! # use backtrack::solve::IterSolveExt;
 //! #  
 //! # struct CountDown {}
 //! #

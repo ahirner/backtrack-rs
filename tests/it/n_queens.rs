@@ -1,6 +1,6 @@
-use backtrack_rs::problems::NQueens;
-use backtrack_rs::solve::{CandidateSolution, IterSolveExt};
-use backtrack_rs::solvers::IterSolveNaive;
+use backtrack::problems::NQueens;
+use backtrack::solve::{CandidateSolution, IterSolveExt};
+use backtrack::solvers::IterSolveNaive;
 
 #[test]
 fn four_queens_search_sat() {
