@@ -38,8 +38,8 @@ impl Scope for CountDown {
 }
 
 impl Check for CountDown{
-    fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
-        solution.last().map_or(true, |last| *last > x)
+    fn extends_sat(&self, solution: &[usize], x: &usize) -> bool {
+        solution.last().map_or(true, |last| *last > *x)
     }
 }
 

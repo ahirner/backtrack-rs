@@ -25,9 +25,9 @@ impl Scope for CountUp {
     }
 }
 impl Check for CountUp {
-    fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
+    fn extends_sat(&self, solution: &[usize], x: &usize) -> bool {
         if let Some(last) = solution.last() {
-            x > *last
+            *x > *last
         } else {
             true
         }

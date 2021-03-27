@@ -22,13 +22,13 @@ impl Scope for NQueens {
 }
 
 impl Check for NQueens {
-    fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
+    fn extends_sat(&self, solution: &[usize], x: &usize) -> bool {
         let k = solution.len();
         for (j, x_j) in solution.iter().enumerate() {
-            if x == *x_j {
+            if *x == *x_j {
                 return false;
             }
-            let diag = (x as isize - *x_j as isize).abs() as usize == k - j;
+            let diag = (*x as isize - *x_j as isize).abs() as usize == k - j;
             if diag {
                 return false;
             }

@@ -32,7 +32,7 @@ impl<P: Scope + Check> Iterator for IterSolveNaive<'_, P> {
 
         let mut index = self.index;
         let candidate = self.domain[index];
-        let sat = self.problem.extends_sat(self.solution.as_ref(), candidate);
+        let sat = self.problem.extends_sat(self.solution.as_ref(), &candidate);
 
         // increment search pointer and solution
         let solution = if sat {
