@@ -1,16 +1,20 @@
-//! `backtrack` lets you define and solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
-//! succinctly.
+//! `backtrack` lets you solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
+//! simply and generically.
 //!
 //! Problems are defined by their *scope* and *checks* against possible solutions.
-//! A [Scope](crate::problem::Scope) determines length and allowed
-//! values in a solution. The [Check](crate::problem::Check)
-//! or [CheckInc](crate::problem::CheckInc) trait determines whether
-//! a particular combination of values is satisfactory.
+//!
+//! A [Scope](crate::problem::Scope) determines length and allowed values of a solution.
+//! The domain defaults to `usize`, but any `T` works if it lives as long as its `Scope`, including references.
+//!
+//! The [Check](crate::problem::Check) or [CheckInc](crate::problem::CheckInc) trait determines whether
+//! a particular combination of values is satisfying.
+//!
 //!
 //! ## Usage
 //!
-//! It is required that solutions shorter than in scope, i.e. partial
+//! It is required that solutions shorter than the entire scope, i.e. partial
 //! solutions must satisfy if the completed solutions should as well.
+//!
 //! [Solvers](crate::solvers) borrow a problem in search for
 //! [candidate solutions](crate::solve::CandidateSolution).
 //!
@@ -52,7 +56,7 @@
 //!
 //! The same result as above can be obtained by first "computing"
 //! the last item at each step. Such an approach makes more sense if
-//! actual work on more than one prior value needs to be peformed
+//! work on more than one prior value needs to be peformed
 //! for any given sat check.
 //!
 //! ```rust

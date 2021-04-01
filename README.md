@@ -5,19 +5,23 @@
 ![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)
 <!-- cargo-sync-readme start -->
 
-`backtrack` lets you define and solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
-succinctly.
+`backtrack` lets you solve [backtracking](https://en.wikipedia.org/wiki/Backtracking) problems
+simply and generically.
 
 Problems are defined by their *scope* and *checks* against possible solutions.
-A [Scope](https://docs.rs/backtrack/latest/backtrack/problem/trait.Scope.html) determines length and allowed
-values in a solution. The [Check](https://docs.rs/backtrack/latest/backtrack/problem/trait.Check.html)
-or [CheckInc](https://docs.rs/backtrack/latest/backtrack/problem/trait.CheckInc.html) trait determines whether
-a particular combination of values is satisfactory.
+
+A [Scope](https://docs.rs/backtrack/latest/backtrack/problem/trait.Scope.html) determines length and allowed values of a solution.
+The domain defaults to `usize`, but any `T` works if it lives as long as its `Scope`, including references.
+
+The [Check](https://docs.rs/backtrack/latest/backtrack/problem/trait.Check.html) or [CheckInc](https://docs.rs/backtrack/latest/backtrack/problem/trait.CheckInc.html) trait determines whether
+a particular combination of values is satisfying.
+
 
 ## Usage
 
-It is required that solutions shorter than in scope, i.e. partial
+It is required that solutions shorter than the entire scope, i.e. partial
 solutions must satisfy if the completed solutions should as well.
+
 [Solvers](https://docs.rs/backtrack/latest/backtrack/solvers/) borrow a problem in search for
 [candidate solutions](https://docs.rs/backtrack/latest/backtrack/solve/enum.CandidateSolution.html).
 
@@ -59,7 +63,7 @@ implement [CheckInc](https://docs.rs/backtrack/latest/backtrack/problem/trait.Ch
 
 The same result as above can be obtained by first "computing"
 the last item at each step. Such an approach makes more sense if
-actual work on more than one prior value needs to be peformed
+work on more than one prior value needs to be peformed
 for any given sat check.
 
 ```rust
@@ -106,5 +110,4 @@ cargo bench
 
 ## Todos
 - [ ] `CheckInc` solver
-- [ ] generic `domain` values
 - [ ] parallelize search
