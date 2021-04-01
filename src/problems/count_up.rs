@@ -15,19 +15,23 @@ impl CountUp {
     }
 }
 
-impl Scope for CountUp {
+impl Scope<'_> for CountUp {
     fn size(&self) -> usize {
         self.n
     }
 
-    fn domain(&self) -> Vec<usize> {
-        self.domain.clone().collect()
+    fn value(&self, index: usize) -> usize {
+        self.domain.start + index
+    }
+
+    fn len(&self) -> usize {
+        self.domain.len()
     }
 }
 impl Check for CountUp {
-    fn extends_sat(&self, solution: &[usize], x: usize) -> bool {
+    fn extends_sat(&self, solution: &[usize], x: &usize) -> bool {
         if let Some(last) = solution.last() {
-            x > *last
+            x > last
         } else {
             true
         }

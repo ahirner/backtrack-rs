@@ -8,22 +8,22 @@ use std::iter::FilterMap;
 /// Each enum is a test of the next best candidate solution.
 /// The iterator is exhausted when no more candidates can be tried.
 #[derive(Debug)]
-pub enum CandidateSolution {
+pub enum CandidateSolution<T = usize> {
     /// Satisfactory solution (but too short)
     Incomplete,
     /// Satisfying and complete solution including its values
-    Sat(Vec<usize>),
+    Sat(Vec<T>),
     /// Unsatisfying (and maybe too short) solution including its values
-    Unsat(Vec<usize>),
+    Unsat(Vec<T>),
 }
 
 /// Items of completed solutions.
 #[derive(Debug)]
-pub enum Solution {
+pub enum Solution<T = usize> {
     /// Satisfying and complete solution including its values
-    Sat(Vec<usize>),
+    Sat(Vec<T>),
     /// Unsatisfying (and maybe too short) solution including its values
-    Unsat(Vec<usize>),
+    Unsat(Vec<T>),
 }
 
 type OptionalSat = Option<Vec<usize>>;
