@@ -16,7 +16,7 @@ where
 impl<'p, P: Scope<'p, T> + Check<T>, T> IterSolveNaive<'p, P, T> {
     pub fn new(problem: &'p P) -> Self {
         let mut solution_index = Vec::with_capacity(problem.size());
-        if !problem.is_empty() {
+        if !(problem.is_empty() || problem.size() == 0) {
             solution_index.push(0);
         }
 

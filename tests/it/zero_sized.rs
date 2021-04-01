@@ -41,13 +41,12 @@ fn zero_sized_problem() {
 }
 
 #[test]
-#[should_panic]
 fn zero_len_problem() {
     let prob = VarSizedProblem { size: 4, len: 0 };
     let solver = IterSolveNaive::new(&prob);
 
     let mut sats = solver.sat_iter();
-    sats.next();
+    assert_eq!(sats.next(), None);
 }
 
 #[test]
