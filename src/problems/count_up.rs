@@ -11,7 +11,7 @@ pub struct CountUp {
 
 impl CountUp {
     pub fn new(n: usize, domain: Range<usize>) -> Self {
-        CountUp { n, domain: domain }
+        CountUp { n, domain }
     }
 }
 

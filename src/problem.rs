@@ -14,6 +14,10 @@ pub trait Scope<'a, T: 'a = usize> {
     /// Return number of domain values
     fn len(&self) -> usize;
 
+    fn is_empty(&self) -> bool {
+        self.len() > 0
+    }
+
     // todo: is this good practice or we want some IntoIterator impl?
     fn iter_values(&'a self) -> ScopeIter<'a, T>
     where
