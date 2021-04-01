@@ -25,9 +25,10 @@
 //! /// Obtain permutations of some 3 descending numbers
 //! struct CountDown {}
 //!
-//! impl Scope for CountDown {
+//! impl Scope<'_> for CountDown {
 //!     fn size(&self) -> usize { 3 }
-//!     fn domain(&self) -> Vec<usize> { (0..=3).collect() }
+//!     fn value(&self, index: usize) -> usize { index }
+//!     fn len(&self) -> usize { 4 }
 //! }
 //!
 //! impl Check for CountDown{
@@ -62,9 +63,10 @@
 //! #  
 //! # struct CountDown {}
 //! #
-//! # impl Scope for CountDown {
+//! # impl Scope<'_> for CountDown {
 //! #     fn size(&self) -> usize { 3 }
-//! #     fn domain(&self) -> Vec<usize> { (0..=3).collect() }
+//! #     fn value(&self, index: usize) -> usize { index }
+//! #     fn len(&self) -> usize { 4 }
 //! # }
 //! #
 //! impl CheckInc for CountDown{

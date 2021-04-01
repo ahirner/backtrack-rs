@@ -2,77 +2,92 @@ use crate::problem::{Check, Scope};
 use crate::solve::CandidateSolution;
 
 /// Backtracking solver without planning
-pub struct IterSolveNaive<'a, P: Scope + Check> {
-    problem: &'a P,
-    /// Current index into solution domain
-    index: usize,
-    /// Scratch pad, length is current level of solution
-    solution: Vec<usize>,
-    /// Cached domain values from problem
-    domain: Vec<usize>,
-    /// Whether all solutions have been checked
-    terminated: bool,
+pub struct IterSolveNaive<'p, P: Scope<'p, T> + Check<T>, T = usize>
+where
+    T: 'p,
+{
+    problem: &'p P,
+    /// Scratch pad of indices into domain, length is current level of solution
+    solution_indices: Vec<usize>,
+    /// Scratch pad solution, length is current level of partially satisfied solution
+    solution: Vec<T>,
 }
 
-impl<'a, P: Scope + Check> IterSolveNaive<'a, P> {
-    pub fn new(problem: &'a P) -> Self {
+impl<'p, P: Scope<'p, T> + Check<T>, T> IterSolveNaive<'p, P, T> {
+    pub fn new(problem: &'p P) -> Self {
+        let mut solution_index = Vec::with_capacity(problem.size());
+        solution_index.push(0);
+
         let solution = Vec::with_capacity(problem.size());
-        let domain = problem.domain();
-        IterSolveNaive { problem, index: 0, solution, domain, terminated: false }
+
+        IterSolveNaive { problem, solution_indices: solution_index, solution }
+    }
+
+    fn value(&self, index: usize) -> T {
+        self.problem.value(index)
+    }
+
+    fn make_solution(&self) -> Vec<T> {
+        let mut solution = Vec::with_capacity(self.solution_indices.len() + 1);
+        for i in self.solution_indices.iter() {
+            solution.push(self.value(*i));
+        }
+        solution
     }
 }
 
-impl<P: Scope + Check> Iterator for IterSolveNaive<'_, P> {
-    type Item = CandidateSolution;
+impl<'p, P: Scope<'p, T> + Check<T>, T> Iterator for IterSolveNaive<'p, P, T> {
+    type Item = CandidateSolution<T>;
 
-    fn next(&mut self) -> Option<CandidateSolution> {
-        if self.terminated {
-            return None;
-        }
+    fn next(&mut self) -> Option<Self::Item> {
+        // todo: push/pop less
+        let mut index = match self.solution_indices.pop() {
+            Some(index) => index,
+            // terminated through backtracking
+            None => return None,
+        };
 
-        let mut index = self.index;
-        let candidate = self.domain[index];
-        let sat = self.problem.extends_sat(self.solution.as_ref(), &candidate);
+        let candidate = self.value(index);
+        let sat = self.problem.extends_sat(self.solution.as_slice(), &candidate);
 
         // increment search pointer and solution
         let solution = if sat {
-            let complete = self.solution.len() + 1 == self.problem.size();
+            let complete = self.solution_indices.len() + 1 == self.problem.size();
             if complete {
+                let mut sat_solution = self.make_solution();
+                sat_solution.push(candidate);
                 // breadth-next
                 index += 1;
-                // todo: can we borrow until next candidate solution?
-                let mut sat_solution = self.solution.clone();
-                sat_solution.push(candidate);
                 Some(CandidateSolution::Sat(sat_solution))
             } else {
-                // depth-first
                 self.solution.push(candidate);
+                self.solution_indices.push(index);
+                // depth-first
                 index = 0;
                 Some(CandidateSolution::Incomplete)
             }
         } else {
+            let unsat_solution = self.make_solution();
             // breadth-next
             index += 1;
-
-            // todo: can we borrow until next candidate solution?
-            let mut unsat_solution = self.solution.clone();
-            unsat_solution.push(candidate);
             Some(CandidateSolution::Unsat(unsat_solution))
         };
 
-        // backtrack or terminate
-        while index == self.domain.len() {
-            let last_candidate = self.solution.pop();
-            if let Some(last) = last_candidate {
-                // todo: cache indices
-                index = self.domain.iter().position(|i| *i == last).unwrap() + 1;
+        // backtrack
+        let mut terminated = false;
+        while index == self.problem.len() {
+            if let Some(old_index) = self.solution_indices.pop() {
+                index = old_index + 1;
             } else {
-                self.terminated = true;
+                terminated = true;
                 break;
             }
+            self.solution.truncate(self.solution_indices.len());
         }
 
-        self.index = index;
+        if !terminated {
+            self.solution_indices.push(index);
+        }
         solution
     }
 }

@@ -3,11 +3,42 @@
 use std::fmt::Debug;
 
 /// Size and solution domain of a problem
-pub trait Scope<T = usize> {
+pub trait Scope<'a, T: 'a = usize> {
     /// Return number values needed for a complete solution
     fn size(&self) -> usize;
-    /// Return all allowed values in a solution
-    fn domain(&self) -> Vec<T>;
+
+    /// Return value from solution domain
+    /// # Arguments
+    /// * `index`: index < than `len` into domain
+    fn value(&'a self, index: usize) -> T;
+    /// Return number of domain values
+    fn len(&self) -> usize;
+
+    // todo: is this good practice or we want some IntoIterator impl?
+    fn iter_values(&'a self) -> ScopeIter<'a, T>
+    where
+        Self: Sized,
+    {
+        ScopeIter { index: 0, scope: self }
+    }
+}
+
+pub struct ScopeIter<'a, T> {
+    index: usize,
+    scope: &'a dyn Scope<'a, T>,
+}
+
+impl<'a, T> Iterator for ScopeIter<'a, T> {
+    type Item = T;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.scope.len() {
+            None
+        } else {
+            self.index += 1;
+            Some(self.scope.value(self.index - 1))
+        }
+    }
 }
 
 /// Check if a combination of values is satisfactory
@@ -17,6 +48,7 @@ pub trait Check<T = usize> {
     /// # Arguments
     /// * `solution`: candidate solution from x_0 to x_l-1 deemed valid
     /// * `x`: new value
+    // todo: accept x: Borrow<T> or similar if without loss in ergonomics
     fn extends_sat(&self, solution: &[T], x: &T) -> bool;
 }
 
@@ -42,7 +74,7 @@ impl<C: CheckInc<T>, T> Check<T> for C {
     fn extends_sat(&self, solution: &[T], x: &T) -> bool {
         let mut accu = None;
         // manual fold with locally owned accu
-        for s in solution.iter() {
+        for s in solution {
             accu = Some(self.fold_acc(accu.as_ref(), s));
         }
         self.accu_sat(accu.as_ref(), x, solution.len())

@@ -32,9 +32,10 @@ use backtrack::solve::IterSolveExt;
 /// Obtain permutations of some 3 descending numbers
 struct CountDown {}
 
-impl Scope for CountDown {
+impl Scope<'_> for CountDown {
     fn size(&self) -> usize { 3 }
-    fn domain(&self) -> Vec<usize> { (0..=3).collect() }
+    fn value(&self, index: usize) -> usize { index }
+    fn len(&self) -> usize { 4 }
 }
 
 impl Check for CountDown{
@@ -67,7 +68,7 @@ use backtrack::problem::{CheckInc, Scope};
 impl CheckInc for CountDown{
     type Accumulator = usize;
 
-    fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize) -> Self::Accumulator {
+    fn fold_acc(&self, accu: Option<&Self::Accumulator>, x: &usize) -> Self::Accumulator {
         // only last value is of interest for checking
         *x
     }
