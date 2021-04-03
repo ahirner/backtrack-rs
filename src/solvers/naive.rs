@@ -77,20 +77,16 @@ impl<'p, P: Scope<'p, T> + Check<T>, T> Iterator for IterSolveNaive<'p, P, T> {
         };
 
         // backtrack
-        let mut terminated = false;
         while index == self.problem.len() {
             if let Some(old_index) = self.solution_indices.pop() {
                 index = old_index + 1;
             } else {
-                terminated = true;
-                break;
+                return solution;
             }
             self.solution.truncate(self.solution_indices.len());
         }
 
-        if !terminated {
-            self.solution_indices.push(index);
-        }
+        self.solution_indices.push(index);
         solution
     }
 }
