@@ -69,7 +69,8 @@ impl<'p, P: Scope<'p, T> + Check<T>, T> Iterator for IterSolveNaive<'p, P, T> {
                 Some(CandidateSolution::Incomplete)
             }
         } else {
-            let unsat_solution = self.make_solution();
+            let mut unsat_solution = self.make_solution();
+            unsat_solution.push(candidate);
             // breadth-next
             index += 1;
             Some(CandidateSolution::Unsat(unsat_solution))
