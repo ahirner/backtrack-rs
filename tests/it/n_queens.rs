@@ -1,3 +1,4 @@
+use crate::common::assert_unsat_unique;
 use backtrack::problems::NQueens;
 use backtrack::solve::{CandidateSolution, IterSolveExt};
 use backtrack::solvers::IterSolveNaive;
@@ -12,6 +13,13 @@ fn four_queens_search_sat() {
     assert_eq!(sats.next(), Some(vec![1, 3, 0, 2]));
     assert_eq!(sats.next(), Some(vec![2, 0, 3, 1]));
     assert_eq!(sats.next(), None);
+}
+
+#[test]
+fn four_queens_unsat_unique() {
+    let n_queens = NQueens::new(4);
+    let unsats = IterSolveNaive::new(&n_queens).unsat_iter();
+    assert_unsat_unique(unsats);
 }
 
 #[test]

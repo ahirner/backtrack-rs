@@ -1,3 +1,4 @@
+use crate::common::assert_unsat_unique;
 use backtrack::problems::CountUp;
 use backtrack::solve::IterSolveExt;
 use backtrack::solvers::IterSolveNaive;
@@ -14,6 +15,13 @@ fn count_up_search_sat() {
     assert_eq!(sats.next(), Some(vec![0, 2, 3]));
     assert_eq!(sats.next(), Some(vec![1, 2, 3]));
     assert_eq!(sats.next(), None);
+}
+
+#[test]
+fn total_sum_unsat_unique() {
+    let asc = CountUp::new(3, 0..4);
+    let unsats = IterSolveNaive::new(&asc).unsat_iter();
+    assert_unsat_unique(unsats);
 }
 
 #[test]
