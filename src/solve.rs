@@ -26,26 +26,37 @@ pub enum Solution<T = usize> {
     Unsat(Vec<T>),
 }
 
-type OptionalSat = Option<Vec<usize>>;
+type MaybeSolution<T> = Option<Solution<T>>;
+type MaybeFilteredSolution<T> = Option<Vec<T>>;
+
+type SolutionMap<S, T> = FilterMap<S, fn(CandidateSolution<T>) -> MaybeSolution<T>>;
+type SpecificSolutionMap<S, T> = FilterMap<S, fn(CandidateSolution<T>) -> MaybeFilteredSolution<T>>;
 
 /// Filter interesting solution candidates
 ///
-pub trait IterSolveExt: Iterator<Item = CandidateSolution> + Sized {
+pub trait IterSolveExt<T>: Iterator<Item = CandidateSolution<T>> + Sized {
     /// Only yield satisfying and unsatisfying solutions
-    fn solution_iter(self) -> FilterMap<Self, fn(CandidateSolution) -> Option<Solution>> {
+    fn solution_iter(self) -> SolutionMap<Self, T> {
         self.filter_map(|s| match s {
-            CandidateSolution::Sat(sat) => Some(Solution::Sat(sat)),
-            CandidateSolution::Unsat(unsat) => Some(Solution::Unsat(unsat)),
-            CandidateSolution::Incomplete => None,
+            CandidateSolution::<T>::Sat(sat) => Some(Solution::Sat(sat)),
+            CandidateSolution::<T>::Unsat(unsat) => Some(Solution::Unsat(unsat)),
+            CandidateSolution::<T>::Incomplete => None,
         })
     }
     // Only yield satisfying solutions
-    fn sat_iter(self) -> FilterMap<Self, fn(CandidateSolution) -> OptionalSat> {
+    fn sat_iter(self) -> SpecificSolutionMap<Self, T> {
         self.filter_map(|s| match s {
-            CandidateSolution::Sat(sat) => Some(sat),
+            CandidateSolution::<T>::Sat(sat) => Some(sat),
+            _ => None,
+        })
+    }
+    // Only yield unsatisfying solutions
+    fn unsat_iter(self) -> SpecificSolutionMap<Self, T> {
+        self.filter_map(|s| match s {
+            CandidateSolution::<T>::Unsat(sat) => Some(sat),
             _ => None,
         })
     }
 }
 
-impl<T: Iterator<Item = CandidateSolution>> IterSolveExt for T {}
+impl<T, I: Iterator<Item = CandidateSolution<T>>> IterSolveExt<T> for I {}
