@@ -34,6 +34,7 @@ impl Scope<'_> for TotalSum {
 #[derive(Debug, Clone)]
 pub struct SumReached {
     sum: usize,
+    last_satisfied: bool,
     satisfied: bool,
 }
 
@@ -45,22 +46,24 @@ impl CheckInc for TotalSum {
         x: &usize,
         _index: usize,
     ) -> Self::Accumulator {
-        let sum = if let Some(a) = accu { a.sum + *x } else { *x };
-        let satisfied = sum >= self.sum_at_least;
-        SumReached { sum, satisfied }
+        let last_satisfied = self.sum_at_least == 0;
+        let mut accu = accu.unwrap_or(SumReached { sum: 0, last_satisfied, satisfied: false });
+        accu.sum += *x;
+        accu.last_satisfied = accu.satisfied;
+        accu.satisfied = accu.sum >= self.sum_at_least;
+        accu
     }
 
-    fn accu_sat(&self, accu: Option<&Self::Accumulator>, x: &usize, index: usize) -> bool {
-        let last_satisfied = accu.map_or(false, |a| a.satisfied);
-        let accu_new = self.fold_acc(accu.cloned(), &x, index);
+    fn accu_sat(&self, accu: &Self::Accumulator, x: &usize, index: usize) -> bool {
+        let last_satisfied = accu.last_satisfied;
 
         // reject incomplete solutions early iff non-zero addition and last was already satisfied
         if index < self.n - 1 {
-            !(*x > 0 && accu_new.satisfied && last_satisfied)
+            !(*x > 0 && accu.satisfied && last_satisfied)
         } else if *x > 0 {
-            (!last_satisfied) && accu_new.satisfied
+            (!last_satisfied) && accu.satisfied
         } else {
-            accu_new.satisfied
+            accu.satisfied
         }
     }
 }

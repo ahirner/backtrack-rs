@@ -74,15 +74,15 @@
 //! # }
 //! #
 //! impl CheckInc for CountDown{
-//!     type Accumulator = usize;
+//!     type Accumulator = (usize, usize);
 //!
 //!     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize, index: usize) -> Self::Accumulator {
-//!         // only last value is of interest for checking
-//!         *x
+//!         // accumulate last and current value for checking
+//!         accu.map_or_else(||(*x+1, *x), |last| (last.1, *x))
 //!     }
 //!
-//!     fn accu_sat(&self, accu: Option<&Self::Accumulator>, x: &usize, index: usize) -> bool {
-//!        accu.map_or(true, |last| last > x)
+//!     fn accu_sat(&self, accu: &Self::Accumulator, x: &usize, index: usize) -> bool {
+//!        accu.0 > accu.1
 //!     }
 //! }
 //! // since `CheckInc` impls `Check`, the same solver as before can be used

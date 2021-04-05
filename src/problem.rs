@@ -71,7 +71,7 @@ pub trait CheckInc<T = usize> {
     /// * `accu`: accumulated checks before value `x`
     /// * `x`: new value
     /// * `index`: index of `x`, 0 is the first element, at index 0 `accu` is also `None`
-    fn accu_sat(&self, accu: Option<&Self::Accumulator>, x: &T, index: usize) -> bool;
+    fn accu_sat(&self, accu: &Self::Accumulator, x: &T, index: usize) -> bool;
 }
 
 impl<C: CheckInc<T>, T> Check<T> for C {
@@ -81,6 +81,8 @@ impl<C: CheckInc<T>, T> Check<T> for C {
         for (i, s) in solution.iter().enumerate() {
             accu = Some(self.fold_acc(accu, s, i));
         }
-        self.accu_sat(accu.as_ref(), x, solution.len())
+        // todo: a bit ugly
+        let accu_final = self.fold_acc(accu, x, solution.len());
+        self.accu_sat(&accu_final, x, solution.len())
     }
 }
