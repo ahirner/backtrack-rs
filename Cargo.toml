@@ -17,7 +17,7 @@ repository = "https://github.com/ahirner/backtrack-rs"
 criterion = "0.3"
 
 [[bench]]
-name = "n_queens"
+name = "criterion"
 harness = false
 
 [package.metadata.docs.rs]
