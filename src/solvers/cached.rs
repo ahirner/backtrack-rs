@@ -9,8 +9,6 @@ where
     problem: &'p P,
     /// Scratch pad of indices into domain, length is current level of solution
     solution_indices: Vec<usize>,
-    /// Scratch pad solution, length is current level of partially satisfied solution
-    solution: Vec<T>,
     /// Scratch pad accumulations, length is current level of solution
     states: Vec<P::Accumulator>,
 }
@@ -25,10 +23,9 @@ where
             solution_index.push(0);
         }
 
-        let solution = Vec::with_capacity(problem.size());
         let states = Vec::with_capacity(problem.size());
 
-        IterSolveCached { problem, solution_indices: solution_index, solution, states }
+        IterSolveCached { problem, solution_indices: solution_index, states }
     }
 
     fn value(&self, index: usize) -> T {
@@ -77,7 +74,6 @@ where
                 index += 1;
                 Some(CandidateSolution::Sat(sat_solution))
             } else {
-                self.solution.push(candidate);
                 self.solution_indices.push(index);
                 self.states.push(accu);
                 // depth-first
@@ -99,7 +95,6 @@ where
             } else {
                 return solution;
             }
-            self.solution.truncate(self.solution_indices.len());
             self.states.truncate(self.solution_indices.len());
         }
 
