@@ -1,6 +1,6 @@
 //! Solver implementations
 
-pub mod naive;
 pub mod cached;
-pub use naive::IterSolveNaive;
+pub mod naive;
 pub use cached::IterSolveCached;
+pub use naive::IterSolveNaive;
