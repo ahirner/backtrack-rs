@@ -2,7 +2,7 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use std::collections::hash_map::DefaultHasher;
 
 use backtrack::problems::{NQueens, TotalSum};
-use backtrack::solvers::IterSolveNaive;
+use backtrack::solvers::{IterSolveCached, IterSolveNaive};
 use std::hash::{Hash, Hasher};
 
 fn bench_n_queens(n: usize) -> usize {
@@ -20,7 +20,7 @@ fn bench_total_sum(n: usize) -> usize {
         domain.push(v);
     }
     let total_sum = TotalSum::new(n, &domain, n * 4);
-    let solver = IterSolveNaive::new(&total_sum);
+    let solver = IterSolveCached::new(&total_sum);
     solver.into_iter().count()
 }
 

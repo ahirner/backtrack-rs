@@ -1,6 +1,6 @@
 use backtrack::problem::{Check, Scope};
 use backtrack::solve::IterSolveExt;
-use backtrack::solvers::IterSolveNaive;
+use backtrack::solvers::{IterSolveCached, IterSolveNaive};
 
 struct VarSizedProblem {
     size: usize,
@@ -31,6 +31,8 @@ impl Check for VarSizedProblem {
     }
 }
 
+//impl CheckInc for VarSizedProblem {}
+
 #[test]
 fn zero_sized_problem() {
     let prob = VarSizedProblem { size: 0, len: 4 };
@@ -53,6 +55,32 @@ fn zero_len_problem() {
 fn zero_sized_len_problem() {
     let prob = VarSizedProblem { size: 0, len: 0 };
     let solver = IterSolveNaive::new(&prob);
+
+    let mut sats = solver.sat_iter();
+    assert_eq!(sats.next(), None);
+}
+#[test]
+fn zero_sized_problem_cached() {
+    let prob = VarSizedProblem { size: 0, len: 4 };
+    let solver = IterSolveCached::new(&prob);
+
+    let mut sats = solver.sat_iter();
+    assert_eq!(sats.next(), None);
+}
+
+#[test]
+fn zero_len_problem_cached() {
+    let prob = VarSizedProblem { size: 4, len: 0 };
+    let solver = IterSolveCached::new(&prob);
+
+    let mut sats = solver.sat_iter();
+    assert_eq!(sats.next(), None);
+}
+
+#[test]
+fn zero_sized_len_problem_cached() {
+    let prob = VarSizedProblem { size: 0, len: 0 };
+    let solver = IterSolveCached::new(&prob);
 
     let mut sats = solver.sat_iter();
     assert_eq!(sats.next(), None);
