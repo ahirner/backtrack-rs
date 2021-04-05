@@ -64,7 +64,7 @@ pub trait CheckInc<T = usize> {
     type Accumulator: Debug;
     // todo: instead optional accu require Accumulator: Default?
     /// Produce an `Accumulator` for quick-checking next candidates in `accu_sat`
-    fn fold_acc(&self, accu: Option<&Self::Accumulator>, x: &T) -> Self::Accumulator;
+    fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &T, index: usize) -> Self::Accumulator;
     /// Check if next value is valid against accumulated checks from `fold_acc`
     ///
     /// # Arguments
@@ -78,8 +78,8 @@ impl<C: CheckInc<T>, T> Check<T> for C {
     fn extends_sat(&self, solution: &[T], x: &T) -> bool {
         let mut accu = None;
         // manual fold with locally owned accu
-        for s in solution {
-            accu = Some(self.fold_acc(accu.as_ref(), s));
+        for (i, s) in solution.iter().enumerate() {
+            accu = Some(self.fold_acc(accu, s, i));
         }
         self.accu_sat(accu.as_ref(), x, solution.len())
     }

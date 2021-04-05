@@ -39,7 +39,12 @@ pub struct SumReached {
 
 impl CheckInc for TotalSum {
     type Accumulator = SumReached;
-    fn fold_acc(&self, accu: Option<&Self::Accumulator>, x: &usize) -> Self::Accumulator {
+    fn fold_acc(
+        &self,
+        accu: Option<Self::Accumulator>,
+        x: &usize,
+        _index: usize,
+    ) -> Self::Accumulator {
         let sum = if let Some(a) = accu { a.sum + *x } else { *x };
         let satisfied = sum >= self.sum_at_least;
         SumReached { sum, satisfied }
@@ -47,7 +52,7 @@ impl CheckInc for TotalSum {
 
     fn accu_sat(&self, accu: Option<&Self::Accumulator>, x: &usize, index: usize) -> bool {
         let last_satisfied = accu.map_or(false, |a| a.satisfied);
-        let accu_new = self.fold_acc(accu, &x);
+        let accu_new = self.fold_acc(accu.cloned(), &x, index);
 
         // reject incomplete solutions early iff non-zero addition and last was already satisfied
         if index < self.n - 1 {

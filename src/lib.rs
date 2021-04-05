@@ -76,7 +76,7 @@
 //! impl CheckInc for CountDown{
 //!     type Accumulator = usize;
 //!
-//!     fn fold_acc(&self, accu: Option<&Self::Accumulator>, x: &usize) -> Self::Accumulator {
+//!     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize, index: usize) -> Self::Accumulator {
 //!         // only last value is of interest for checking
 //!         *x
 //!     }
