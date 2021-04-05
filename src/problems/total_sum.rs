@@ -44,10 +44,13 @@ impl CheckInc for TotalSum {
         &self,
         accu: Option<Self::Accumulator>,
         x: &usize,
-        _index: usize,
+        _position: usize,
     ) -> Self::Accumulator {
-        let last_satisfied = self.sum_at_least == 0;
-        let mut accu = accu.unwrap_or(SumReached { sum: 0, last_satisfied, satisfied: false });
+        let mut accu = accu.unwrap_or(SumReached {
+            sum: 0,
+            last_satisfied: self.sum_at_least == 0,
+            satisfied: false,
+        });
         accu.sum += *x;
         accu.last_satisfied = accu.satisfied;
         accu.satisfied = accu.sum >= self.sum_at_least;

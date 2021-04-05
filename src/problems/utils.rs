@@ -1,20 +1,22 @@
 //! Helper functions for unit testing problems
 #![cfg(test)]
 
-use crate::problem::{Check, Scope};
+use crate::problem::{CheckInc, Scope};
 use std::fmt::Debug;
 
 fn sat<'a, T, P>(problem: &P, solution: Vec<T>) -> bool
 where
     T: 'a + Clone,
-    P: Scope<'a, T> + Check<T>,
+    P: Scope<'a, T> + CheckInc<T>,
+    P::Accumulator: Clone,
 {
-    let mut all = Vec::with_capacity(problem.size());
-    for x_l in solution.into_iter() {
-        if !problem.extends_sat(&all, &x_l) {
+    let mut acc0 = None;
+    for (i, x_l) in solution.iter().enumerate() {
+        let acc = problem.fold_acc(acc0.clone(), &x_l, i);
+        if !problem.accu_sat(&acc, &x_l, i) {
             return false;
         }
-        all.push(x_l);
+        acc0 = Some(acc);
     }
     true
 }
@@ -24,7 +26,8 @@ where
 pub(crate) fn sat_safe<'a, T, P, S>(problem: &'a P, solution: S) -> bool
 where
     T: 'a + Clone + Eq + Debug,
-    P: Scope<'a, T> + Check<T>,
+    P: Scope<'a, T> + CheckInc<T>,
+    P::Accumulator: Clone,
     S: IntoIterator<Item = T>,
     S::Item: std::fmt::Debug,
 {

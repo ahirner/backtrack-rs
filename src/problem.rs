@@ -62,27 +62,39 @@ pub trait Check<T = usize> {
 /// It also enables more efficient solvers.
 pub trait CheckInc<T = usize> {
     type Accumulator: Debug;
-    // todo: instead optional accu require Accumulator: Default?
     /// Produce an `Accumulator` for quick-checking next candidates in `accu_sat`
     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &T, index: usize) -> Self::Accumulator;
     /// Check if next value is valid against accumulated checks from `fold_acc`
     ///
     /// # Arguments
-    /// * `accu`: accumulated checks before value `x`
+    /// * `accu`: accumulated checks with prior values `x`
     /// * `x`: new value
-    /// * `index`: index of `x`, 0 is the first element, at index 0 `accu` is also `None`
-    fn accu_sat(&self, accu: &Self::Accumulator, x: &T, index: usize) -> bool;
+    /// * `position`: 0-based position into the partial solution
+    fn accu_sat(&self, accu: &Self::Accumulator, x: &T, position: usize) -> bool;
 }
 
-impl<C: CheckInc<T>, T> Check<T> for C {
-    fn extends_sat(&self, solution: &[T], x: &T) -> bool {
-        let mut accu = None;
-        // manual fold with locally owned accu
-        for (i, s) in solution.iter().enumerate() {
-            accu = Some(self.fold_acc(accu, s, i));
-        }
-        // todo: a bit ugly
-        let accu_final = self.fold_acc(accu, x, solution.len());
-        self.accu_sat(&accu_final, x, solution.len())
+impl<C: Check<T>, T> CheckInc<T> for C
+where
+    T: Debug + Clone,
+{
+    type Accumulator = Vec<T>;
+
+    fn fold_acc(
+        &self,
+        accu: Option<Self::Accumulator>,
+        x: &T,
+        _position: usize,
+    ) -> Self::Accumulator {
+        let mut accu = accu.unwrap_or_default();
+        accu.push(x.clone());
+        accu
+    }
+
+    fn accu_sat(&self, accu: &Self::Accumulator, x: &T, _position: usize) -> bool {
+        self.extends_sat(&accu[..accu.len() - 1], x)
     }
 }
+
+// note: can't blanket impl Check for CheckInc without conflicting with C impls,
+// leaving that as doc that we would probably need something like C: !Check
+// see: https://github.com/rust-lang/rfcs/issues/1053

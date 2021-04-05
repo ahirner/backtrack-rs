@@ -54,15 +54,14 @@
 //! If your checks can be formulated against a reduced solution,
 //! implement [CheckInc](crate::problem::CheckInc) instead.
 //!
-//! The same result as above can be obtained by first "computing"
-//! the last item at each step. Such an approach makes more sense if
-//! work on more than one prior value needs to be peformed
-//! for any given sat check.
+//! The same result as above can be obtained by first computing
+//! intermediate values for any given sat check. Such an approach makes sense if
+//! work between prior candidate values should be reused.
 //!
 //! ```rust
 //! use backtrack::problem::{CheckInc, Scope};
+//! use backtrack::solvers::{IterSolveCached};
 //! // ...
-//! # use backtrack::solvers::IterSolveNaive;
 //! # use backtrack::solve::IterSolveExt;
 //! #  
 //! # struct CountDown {}
@@ -74,23 +73,20 @@
 //! # }
 //! #
 //! impl CheckInc for CountDown{
-//!     type Accumulator = (usize, usize);
+//!     type Accumulator = (usize, bool);
 //!
-//!     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize, index: usize) -> Self::Accumulator {
+//!     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize, _position: usize) -> Self::Accumulator {
 //!         // accumulate last and current value for checking
-//!         accu.map_or_else(||(*x+1, *x), |last| (last.1, *x))
+//!         accu.map_or_else(||(*x, true), |last| (*x, last.0 > *x))
 //!     }
 //!
-//!     fn accu_sat(&self, accu: &Self::Accumulator, x: &usize, index: usize) -> bool {
-//!        accu.0 > accu.1
+//!     fn accu_sat(&self, accu: &Self::Accumulator, _x: &usize, _position: usize) -> bool {
+//!         accu.1
 //!     }
 //! }
-//! // since `CheckInc` impls `Check`, the same solver as before can be used
-//! // todo: specialize solver to actually realize performance advantage
-//! // ...
-//! #
-//! # let solver = IterSolveNaive::new(&CountDown{});
-//! # let mut sats = solver.sat_iter();
+//! // since `CheckInc` exposes state changes, a solver that caches this state should be used
+//! let mut sats = IterSolveCached::new(&CountDown{}).sat_iter();
+//! // ... it gives the same results as above
 //! #
 //! # assert_eq!(sats.next(), Some(vec![2, 1, 0]));
 //! # assert_eq!(sats.next(), Some(vec![3, 1, 0]));
