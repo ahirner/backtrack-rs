@@ -2,32 +2,32 @@ use crate::problem::{CheckInc, Scope};
 use std::fmt::{Debug, Formatter};
 
 #[derive(Debug)]
-pub struct BinQueens {
+pub struct BitQueens {
     n: usize,
 }
 
-impl BinQueens {
+impl BitQueens {
     /// Returns largest solvable size
     pub fn max_n() -> usize {
         std::mem::size_of::<usize>() * 8
     }
     pub fn new(n: usize) -> Self {
-        let bin_width = Self::max_n();
-        assert!(n < bin_width, "Only problem sizes up to {} supported (usize width)", bin_width);
-        BinQueens { n }
+        let bit_width = Self::max_n();
+        assert!(n <= bit_width, "Only problem sizes up to {} supported (usize width)", bit_width);
+        BitQueens { n }
     }
 }
 
 #[derive(Copy, Clone)]
-struct UBinVec(usize);
+struct UBitVec(usize);
 
-impl Debug for UBinVec {
+impl Debug for UBitVec {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:b}", self.0)
     }
 }
 
-impl Scope<'_> for BinQueens {
+impl Scope<'_> for BitQueens {
     fn size(&self) -> usize {
         self.n
     }
@@ -43,13 +43,13 @@ impl Scope<'_> for BinQueens {
 
 #[derive(Debug, Clone)]
 pub struct QueenField {
-    straight: UBinVec,
-    diagonal_left: UBinVec,
-    diagonal_right: UBinVec,
+    straight: UBitVec,
+    diagonal_left: UBitVec,
+    diagonal_right: UBitVec,
     contended: bool,
 }
 
-impl CheckInc for BinQueens {
+impl CheckInc for BitQueens {
     type Accumulator = QueenField;
 
     fn fold_acc(
@@ -77,9 +77,9 @@ impl CheckInc for BinQueens {
             accu
         } else {
             QueenField {
-                straight: UBinVec(one_hot),
-                diagonal_left: UBinVec(one_hot),
-                diagonal_right: UBinVec(one_hot),
+                straight: UBitVec(one_hot),
+                diagonal_left: UBitVec(one_hot),
+                diagonal_right: UBitVec(one_hot),
                 contended: false,
             }
         }
