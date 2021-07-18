@@ -10,7 +10,7 @@ where
     /// Scratch pad of indices into domain, length is current level of solution
     solution_indices: Vec<usize>,
     /// Scratch pad accumulations, length is current level of solution
-    states: Vec<P::Accumulator>,
+    accumulators: Vec<P::Accumulator>,
 }
 
 impl<'p, P: Scope<'p, T> + CheckInc<T>, T> IterSolveCached<'p, P, T>
@@ -23,9 +23,9 @@ where
             solution_index.push(0);
         }
 
-        let states = Vec::with_capacity(problem.size());
+        let accumulators = Vec::with_capacity(problem.size());
 
-        IterSolveCached { problem, solution_indices: solution_index, states }
+        IterSolveCached { problem, solution_indices: solution_index, accumulators }
     }
 
     fn value(&self, index: usize) -> T {
@@ -51,22 +51,18 @@ where
         // todo: push/pop less
         let mut index = match self.solution_indices.pop() {
             Some(index) => index,
-            // terminated through backtracking
+            // terminated by backtracking
             None => return None,
         };
 
         let candidate = self.value(index);
-        let accu = self.problem.fold_acc(
-            // todo: rethink accumulator ownership -> &mut?
-            self.states.last().cloned(),
-            &candidate,
-            self.solution_indices.len(),
-        );
-        let sat = self.problem.accu_sat(&accu, &candidate, self.solution_indices.len());
+        let position = self.solution_indices.len();
+        let accu = self.problem.fold_acc(self.accumulators.last().cloned(), &candidate, position);
+        let sat = self.problem.accu_sat(&accu, &candidate, position);
 
         // increment search pointer and solution
         let solution = if sat {
-            let complete = self.solution_indices.len() + 1 == self.problem.size();
+            let complete = position + 1 == self.problem.size();
             if complete {
                 let mut sat_solution = self.make_solution();
                 sat_solution.push(candidate);
@@ -75,7 +71,7 @@ where
                 Some(CandidateSolution::Sat(sat_solution))
             } else {
                 self.solution_indices.push(index);
-                self.states.push(accu);
+                self.accumulators.push(accu);
                 // depth-first
                 index = 0;
                 Some(CandidateSolution::Incomplete)
@@ -95,7 +91,7 @@ where
             } else {
                 return solution;
             }
-            self.states.truncate(self.solution_indices.len());
+            self.accumulators.truncate(self.solution_indices.len());
         }
 
         self.solution_indices.push(index);

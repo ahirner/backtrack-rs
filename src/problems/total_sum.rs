@@ -57,11 +57,11 @@ impl CheckInc for TotalSum {
         accu
     }
 
-    fn accu_sat(&self, accu: &Self::Accumulator, x: &usize, index: usize) -> bool {
+    fn accu_sat(&self, accu: &Self::Accumulator, x: &usize, position: usize) -> bool {
         let last_satisfied = accu.last_satisfied;
 
         // reject incomplete solutions early iff non-zero addition and last was already satisfied
-        if index < self.n - 1 {
+        if position < self.size() - 1 {
             !(*x > 0 && accu.satisfied && last_satisfied)
         } else if *x > 0 {
             (!last_satisfied) && accu.satisfied

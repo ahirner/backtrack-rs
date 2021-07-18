@@ -62,14 +62,24 @@ pub trait Check<T = usize> {
 /// It also enables more efficient solvers.
 pub trait CheckInc<T = usize> {
     type Accumulator: Debug;
-    /// Produce an `Accumulator` for quick-checking next candidates in `accu_sat`
-    fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &T, index: usize) -> Self::Accumulator;
+    /// Produce `Accumulator` for quick-checking next candidates in `accu_sat`
+    ///
+    /// # Arguments
+    /// * `accu`: accumulator from previous checks or `None` at first
+    /// * `x`: solution candidate
+    /// * `position`: position of `x` into a full solution (0-based)
+    fn fold_acc(
+        &self,
+        accu: Option<Self::Accumulator>,
+        x: &T,
+        position: usize,
+    ) -> Self::Accumulator;
     /// Check if next value is valid against accumulated checks from `fold_acc`
     ///
     /// # Arguments
     /// * `accu`: accumulated checks with prior values `x`
-    /// * `x`: new value
-    /// * `position`: 0-based position into the partial solution
+    /// * `x`: solution candidate
+    /// * `position`: position of `x` into a full solution (0-based)
     fn accu_sat(&self, accu: &Self::Accumulator, x: &T, position: usize) -> bool;
 }
 
