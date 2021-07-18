@@ -7,7 +7,7 @@ use std::iter::FilterMap;
 /// This type is used as item in iterative solvers.
 /// Each enum is a test of the next best candidate solution.
 /// The iterator is exhausted when no more candidates can be tried.
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum CandidateSolution<T = usize> {
     /// Satisfactory solution (but too short)
     Incomplete,
