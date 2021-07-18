@@ -61,20 +61,18 @@ impl CheckInc for BinQueens {
         let one_hot = 1 << x;
 
         if let Some(mut accu) = accu {
-            if (accu.straight.0 & one_hot) > 0 {
-                accu.contended = true;
-                return accu;
-            };
             let diagonal_left = accu.diagonal_left.0 << 1;
             let diagonal_right = accu.diagonal_right.0 >> 1;
-            if ((diagonal_left | diagonal_right) & one_hot) > 0 {
+            let all = diagonal_left | diagonal_right | accu.straight.0;
+
+            if (all & one_hot) > 0 {
                 accu.contended = true;
                 return accu;
             }
 
             accu.straight.0 |= one_hot;
-            accu.diagonal_left.0 = (accu.diagonal_left.0 << 1) | one_hot;
-            accu.diagonal_right.0 = (accu.diagonal_right.0 >> 1) | one_hot;
+            accu.diagonal_left.0 = diagonal_left | one_hot;
+            accu.diagonal_right.0 = diagonal_right | one_hot;
 
             accu
         } else {
