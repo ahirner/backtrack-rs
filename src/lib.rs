@@ -76,7 +76,7 @@
 //!     type Accumulator = (usize, bool);
 //!
 //!     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize, _position: usize) -> Self::Accumulator {
-//!         // accumulate last and current value for checking
+//!         // remember last value and if it was larger than current one
 //!         accu.map_or_else(||(*x, true), |last| (*x, last.0 > *x))
 //!     }
 //!
@@ -84,9 +84,9 @@
 //!         accu.1
 //!     }
 //! }
-//! // since `CheckInc` exposes state changes, a solver that caches this state should be used
+//! // since `CheckInc` works from accumulated state, a solver that caches them should be used
 //! let mut sats = IterSolveCached::new(&CountDown{}).sat_iter();
-//! // ... it gives the same results as above
+//! // ... gives the same results as above
 //! #
 //! # assert_eq!(sats.next(), Some(vec![2, 1, 0]));
 //! # assert_eq!(sats.next(), Some(vec![3, 1, 0]));

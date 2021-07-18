@@ -73,7 +73,7 @@ impl CheckInc for CountDown{
     type Accumulator = (usize, bool);
 
     fn fold_acc(&self, accu: Option<Self::Accumulator>, x: &usize, _position: usize) -> Self::Accumulator {
-        // accumulate last and current value for checking
+        // remember last value and if it was larger than current one
         accu.map_or_else(||(*x, true), |last| (*x, last.0 > *x))
     }
 
@@ -81,9 +81,9 @@ impl CheckInc for CountDown{
         accu.1
     }
 }
-// since `CheckInc` exposes state changes, a solver that caches this state should be used
+// since `CheckInc` works from accumulated state, a solver that caches them should be used
 let mut sats = IterSolveCached::new(&CountDown{}).sat_iter();
-// ... it gives the same results as above
+// ... gives the same results as above
 ```
 
 <!-- cargo-sync-readme end -->
