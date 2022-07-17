@@ -22,8 +22,13 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - name: Install cargo-criterion
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-criterion
       - name: Run benchmarks
-        run: cargo bench | tee output.txt
+        # numbers are printed to stderr...
+        run: cargo criterion --output-format=bencher 3>&1 1>&2 2>&3 | tee output.txt
       - name: Upload criterion report
         uses: actions/upload-artifact@v3
         with:
