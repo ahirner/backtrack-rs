@@ -1,4 +1,5 @@
-on: [push, pull_request]
+on:
+  push:
 
 name: CI
 
@@ -12,7 +13,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        rust: [stable, nightly]
+        rust:
+          - stable
+          - nightly
+          - 1.56.0  # MSRV
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1

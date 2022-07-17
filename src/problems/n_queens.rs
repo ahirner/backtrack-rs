@@ -32,7 +32,7 @@ impl Check for NQueens {
             if x == x_j {
                 return false;
             }
-            let diag = (*x as isize - *x_j as isize).abs() as usize == k - j;
+            let diag = (*x as isize - *x_j as isize).unsigned_abs() == k - j;
             if diag {
                 return false;
             }

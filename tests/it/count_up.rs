@@ -29,7 +29,5 @@ fn count_up_search_nosat() {
     let asc = CountUp::new(4, 0..3);
     let solver = IterSolveNaive::new(&asc);
 
-    let unsats: Vec<_> = solver.solution_iter().collect();
-
-    assert_eq!(unsats.len(), 17);
+    assert_eq!(solver.solution_iter().count(), 17);
 }
