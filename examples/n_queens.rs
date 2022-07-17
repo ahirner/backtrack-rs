@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         eprintln!("n_queens.rs: {:?}", n_queens);
 
         let solver = IterSolveNaive::new(&n_queens);
-        for solution in solver.into_iter() {
+        for solution in solver {
             println!("{:?}", solution);
         }
     } else {
@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         eprintln!("bit_queens.rs: {:?}", bit_queens);
 
         let solver = IterSolveCached::new(&bit_queens);
-        for solution in solver.into_iter() {
+        for solution in solver {
             println!("{:?}", solution);
         }
     }

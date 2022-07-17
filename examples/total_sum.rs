@@ -6,7 +6,7 @@ fn main() {
     eprintln!("total_sum.rs: {:?}", sums);
 
     let solver = IterSolveCached::new(&sums);
-    for solution in solver.into_iter() {
+    for solution in solver {
         println!("{:?}", solution);
     }
 }

@@ -6,7 +6,7 @@ fn main() {
     eprintln!("count_up.rs: {:?}", asc);
 
     let solver = IterSolveNaive::new(&asc);
-    for solution in solver.into_iter() {
+    for solution in solver {
         println!("{:?}", solution);
     }
 }
