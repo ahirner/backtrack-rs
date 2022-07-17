@@ -102,10 +102,21 @@ cargo run --example n_queens 4 | grep Sat
 # sequence of numbers which sum up to a minimum value but not more
 cargo run --example total_sum | grep Sat
 ```
-## Benchmarks
+## Benchmarks [![bench](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-bench.yml/badge.svg)](https://github.com/ahirner/backtrack-rs/actions/workflows/rust-bench.yml)
+
+Benchmarks run from CI are published [here](https://ahirner.github.io/backtrack-rs/dev/bench/).
+
 `backtrack-rs` uses [criterion](https://crates.io/crates/criterion) for benches.
+To benchmark locally, install the cargo command:
+
 ```bash
-cargo bench
+cargo install cargo-criterion
+```
+
+The run them:
+
+```bash
+cargo criterion
 ```
 
 ## Todos
