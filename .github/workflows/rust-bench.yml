@@ -7,6 +7,10 @@ on:
 
 name: bench
 
+permissions:
+  deployments: write
+  contents: write
+
 jobs:
   bench:
     name: bench
@@ -18,6 +22,18 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-      - uses: actions-rs/cargo@v1
+      - name: Run benchmarks
+        run: cargo bench | tee output.txt
+      - name: Upload criterion report
+        uses: actions/upload-artifact@v3
         with:
-          command: bench
+          name: criterion
+          path: target/criterion
+      - name: Publish benchmarks to gh-pages
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: backtrack-rs criterion
+          tool: 'rust'
+          output-file-path: output.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
